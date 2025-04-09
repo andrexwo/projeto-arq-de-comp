@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void ler_arquivo(string nomeArq, vector<string>& linhas) {
+void ler_arquivo(string nomeArq, vector<string>& linhas) { // funcao para ler arquivo de entrada e armazenar as linhas de codigo em um vector
     string linha;
     ifstream arq(nomeArq);
 
@@ -26,7 +26,7 @@ void ler_arquivo(string nomeArq, vector<string>& linhas) {
 
 
 
-void str_to_int(string linha, vector<int>& inst) {
+void str_to_int(string linha, vector<int>& inst) { // funcao com finalidade de pegar uma linha de codigo e adicionar cada valor em um vector de inteiros, estes que contem cada valor de entrada da ula
     for (char c : linha) {
         if (isdigit(c)) {
             inst.push_back(c - '0');
@@ -34,11 +34,11 @@ void str_to_int(string linha, vector<int>& inst) {
     }   
 }
 
-typedef struct {
+typedef struct { // tipo instrucao, ela contem todas as entradas da ula
     int f0, f1, enA, enB, invA, inc;
 } Instruction;
 
-void atribuir_instrucoes(Instruction& in, vector<int>& c) {
+void atribuir_instrucoes(Instruction& in, vector<int>& c) { // funcao para atribuir na variavel tipo instrucao os valores das entradas da ula, armazenadas no vector de inteiros
     in.f0 = c[0];
     in.f1 = c[1];
     in.enA = c[2];
@@ -47,7 +47,7 @@ void atribuir_instrucoes(Instruction& in, vector<int>& c) {
     in.inc = c[5];
 }
 
-uint32_t somar_com_carry(uint32_t a, uint32_t b, int carry_in, int& carry_out) {
+uint32_t somar_com_carry(uint32_t a, uint32_t b, int carry_in, int& carry_out) { // funcao de soma com carry in e out, passando o carryout com & para ele ser modificado fora da funcao, caso nao houvese o &, o valor de carry out so seria modificado dentor da funcao, o que nao seria util
     uint32_t resultado = 0;
     carry_out = carry_in;
 
@@ -64,27 +64,27 @@ uint32_t somar_com_carry(uint32_t a, uint32_t b, int carry_in, int& carry_out) {
     return resultado;
 }
 
-void ULA(uint32_t A, uint32_t B) {
+void ULA(uint32_t A, uint32_t B) { // funcao ula, aqui onde as operacoes serao feitas
     vector<string> linhas;
-    string nomeArquivo = "C:\\Users\\andre\\Documents\\GitHub\\projeto-arq-de-comp\\etapa1.txt";
+    string nomeArquivo = "C:\\Users\\andre\\Documents\\GitHub\\projeto-arq-de-comp\\etapa1.txt"; //strings contendo os enderecos dos arquivos para leitura e escrita, apenas mude para o que desejar
 
     ofstream arq_saida("C:\\Users\\andre\\Documents\\GitHub\\projeto-arq-de-comp\\saida1.txt");
     if (!arq_saida.is_open()) {
         cerr << "nao foi possivel abrir o arquivo" << endl;
     }
 
-    uint32_t C = 0;
+    uint32_t C = 0; // valor de saida, poderai ser S
     int carry = 0;
     int cont = 0;
 
     ler_arquivo(nomeArquivo, linhas);
 
-        arq_saida << "B....:" << bitset<32>(B) << endl;
+        arq_saida << "B....:" << bitset<32>(B) << endl; // demonstracao dos valores iniciais, antes de iniciar o programa
         arq_saida << "A....:" << bitset<32>(A) << endl;
         arq_saida << "Start of Program" << endl;
         arq_saida << "==============================================" << endl;
 
-    for (size_t pc = 0; pc < linhas.size(); pc++) {
+    for (size_t pc = 0; pc < linhas.size(); pc++) { // a variavel pc mostra em qual operacao estamos
         
         vector<int> inst;
         str_to_int(linhas[pc], inst);
@@ -94,7 +94,7 @@ void ULA(uint32_t A, uint32_t B) {
         Instruction i;
         atribuir_instrucoes(i, inst);
 
-        // Lógica das instruções (mantida exatamente como estava)
+        //aqui onde as operacoes sao selecionadas, de acordo com os valores contidos na variavel tipo instrucao
         if(i.f0 == 0 && i.f1 == 0) { // operacoes logicas basicas
             if (i.enA == 1 && i.enB == 0 && i.invA == 0) {
                 C = A;
